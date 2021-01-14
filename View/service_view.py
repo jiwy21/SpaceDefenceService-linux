@@ -20,7 +20,7 @@ def intermediate_list():
 
 @app.route('/<int:id_zpsx>/intermediate_IQ', methods=['GET', 'POST'])
 @app.route('/<int:id_zpsx>/intermediate_IQ.json', methods=['GET', 'POST'])
-def intermediate_iq(id_zpsx):
+def intermediate_iq(id_zpsx): 
     """
     :param id_zpsx: 中频数据编号
     :return: IQ两路数据
