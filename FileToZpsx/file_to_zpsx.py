@@ -1,7 +1,7 @@
 
 # -*- coding:utf-8 -*-
 
-import FileToZpsx.config as cfg
+import config as cfg
 import struct
 from datetime import date
 import math
@@ -11,13 +11,17 @@ import numpy as np
 
 
 # 编写sql语句，连接数据库并写入数据
-sql = "select count(*) from %s" % cfg.TABLE_ZPSX
+sql = "select count(*), max(id) from %s" % cfg.TABLE_ZPSX
 
 conn = psycopg2.connect(database=cfg.DATABASE, user=cfg.USER, password=cfg.PASSWORD_DB,
                         host=cfg.SERVER_IP, port=cfg.PORT_DB)
 cur = conn.cursor()
 cur.execute(sql)
-cur_id = cur.fetchall()[0][0]
+res = cur.fetchall()[0]
+if res[0] == 0:
+    cur_id = 0
+else:
+    cur_id = res[1]
 
 
 I = []
@@ -122,7 +126,9 @@ for file in os.listdir(cfg.SOURCE_DIR):
                 arrival_time = '%s %02d:%02d:%2.4f' \
                                % (arrival_date, hour, minute, res_second)
 
-                # 下行频率（kHz）
+                # 下行频率及单位（kHz）
+                freq_map = {0: 'unknown', 1: 'Hz', 2: 'kHz', 3: 'MHz', 4: 'GHz', 5: 'else'}
+                freq_unit_resolved = freq_map[freq_unit_resolved]
                 down_freq = freq_down_resolved
 
                 # 比特率（bps）
