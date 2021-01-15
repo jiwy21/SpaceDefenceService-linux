@@ -18,13 +18,14 @@ def intermediate_list():
     return logic.list_intermediate(seek_start, seek_end)
 
 
-@app.route('/<int:id_zpsx>/intermediate_IQ', methods=['GET', 'POST'])
-@app.route('/<int:id_zpsx>/intermediate_IQ.json', methods=['GET', 'POST'])
-def intermediate_iq(id_zpsx):
+@app.route('/intermediate_IQ', methods=['GET', 'POST'])
+@app.route('/intermediate_IQ.json', methods=['GET', 'POST'])
+def intermediate_iq():
     """
-    :param id_zpsx: 中频数据编号
     :return: IQ两路数据
     """
+    id_zpsx = int(request.args.get('id_zpsx'))
+
     logic = ServiceLogic()
     return logic.extract_iq(id_zpsx)
 
