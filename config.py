@@ -20,6 +20,11 @@ DATABASE = 'test'
 SECOND_BEFORE = 10
 SECOND_AFTER = 0
 
+# 信噪比估计
+EIG_THRESHOLD = 1e-5
+N_SNR = 50
+K_SNR = 100
+
 
 
 

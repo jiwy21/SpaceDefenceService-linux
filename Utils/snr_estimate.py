@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 
 import numpy as np
-import FileToZpsx.config as cfg
+import config as cfg
 
 
 def mdl(l, b, n, k):
@@ -48,7 +48,7 @@ def argmin_mdl(b, n, k):
     return l
 
 
-def snr_estimate(signal, n=50, k=200):
+def snr_estimate(signal, n=cfg.N_SNR, k=cfg.K_SNR):
     """
     :param signal: I + jQ(长度至少n*k)
     :param n: length of each signal

@@ -4,10 +4,10 @@
 import config as cfg
 import struct
 from datetime import date
-import math
 import os
 import psycopg2
 import numpy as np
+from Utils.snr_estimate import snr_estimate
 
 
 # 编写sql语句，连接数据库并写入数据
@@ -132,9 +132,12 @@ for file in os.listdir(cfg.SOURCE_DIR):
                 down_freq = freq_down_resolved
 
                 # 比特率（bps）
-                bit_rate = ((packages_resolved - 1) * 1024 + length_resolved) * 8 \
+                bit_rate = ((packages_resolved - 1) * 1024 + length_resolved) / 2 * 8 \
                     / (duration_resolved * 1e-4)
                 bit_rate = float('%.4f' % bit_rate)
+
+                # 采样率（Hz）
+                fs_rate = bit_rate / (4 * 8)
 
                 # 码速率（Hz）
                 # m = 4  # m为单位码元对应的比特数，调制方式为QPSK时，m = 4
@@ -145,6 +148,13 @@ for file in os.listdir(cfg.SOURCE_DIR):
                 # alpha = 0.16  # alpha为低通滤波器滚降系数，取值一般不小于0.15
                 # band_width = (1 + alpha) * code_rate
                 band_width = -1
+
+                # 信噪比（dB）
+                signal = []
+                for i in range(len(I)):
+                    signal.append(complex(I[i], Q[i]))
+                snr = snr_estimate(signal)
+                print(snr)
 
                 # 打印输出
                 # print(file, count_resolved, sep=":")
