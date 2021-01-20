@@ -16,7 +16,9 @@ PORT_DB = '5432'
 SERVER_IP = '127.0.0.1'
 DATABASE = 'test'
 
-
+# 定位结果数据到达时间前的秒数
+SECOND_BEFORE = 10
+SECOND_AFTER = 0
 
 
 

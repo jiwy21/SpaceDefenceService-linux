@@ -8,12 +8,13 @@
 # b = item_to_map(a)
 # print(b)
 
-from datetime import datetime
+import datetime
 
 str = '2020-06-18 23:34:07'
 str2date = datetime.strptime(str, "%Y-%m-%d %H:%M:%S")
-print(str2date)
+print(str2date.timedelta(days=-1))
 
+a = datetime(str)
 
 
 

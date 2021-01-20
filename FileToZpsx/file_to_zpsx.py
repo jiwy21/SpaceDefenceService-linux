@@ -133,7 +133,7 @@ for file in os.listdir(cfg.SOURCE_DIR):
 
                 # 比特率（bps）
                 bit_rate = ((packages_resolved - 1) * 1024 + length_resolved) * 8 \
-                    / (packages_resolved * duration_resolved * 1e-4)
+                    / (duration_resolved * 1e-4)
                 bit_rate = float('%.4f' % bit_rate)
 
                 # 码速率（Hz）

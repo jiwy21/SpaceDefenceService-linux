@@ -30,7 +30,16 @@ def intermediate_iq():
     return logic.extract_iq(id_zpsx)
 
 
+@app.route('/intermediate_list_sxdw', methods=['GET', 'POST'])
+@app.route('/intermediate_list_sxdw.json', methods=['GET', 'POST'])
+def intermediate_list_sxdw():
+    """
+    :return: 中频数据json列表
+    """
+    seek_time = request.args.get('time_seek')
 
+    logic = ServiceLogic()
+    return logic.list_intermediate_sxdw(seek_time)
 
 
 

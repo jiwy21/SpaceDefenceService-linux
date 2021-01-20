@@ -27,7 +27,13 @@ class ServiceLogic(LogicBase):
         self.items = ServiceDblink.query_intermediate_iq(id)
         return self.toJson()
 
-
+    def list_intermediate_sxdw(self, seek_time):
+        """
+        :param seek_time: 需要检索的时间
+        :return:
+        """
+        self.items = ServiceDblink.query_intermediate_list_sxdw(seek_time)
+        return self.toJson()
 
 
 
