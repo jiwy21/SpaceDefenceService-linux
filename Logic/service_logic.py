@@ -29,13 +29,19 @@ class ServiceLogic(LogicBase):
 
     def list_intermediate_sxdw(self, seek_time):
         """
-        :param seek_time: 需要检索的时间
+        :param seek_time: 需要检索的定位结果数据时间
         :return:
         """
         self.items = ServiceDblink.query_intermediate_list_sxdw(seek_time)
         return self.toJson()
 
-
+    def list_sxdw_intermediate(self, seek_time):
+        """
+        :param seek_time: 需要检索的中频数据时间
+        :return:
+        """
+        self.items = ServiceDblink.query_sxdw_list_intermediate(seek_time)
+        return self.toJson()
 
 
 

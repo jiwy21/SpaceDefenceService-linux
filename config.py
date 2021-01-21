@@ -1,12 +1,15 @@
 # -*- coding:utf-8 -*-
 
 
-SOURCE_DIR = 'E:/36Data/36data/2020-08-28/'
-DEST_DIR = 'E:/36Data/IQ_Data/2020-08-28/'
+ZPSX_SOURCE_DIR = 'E:/36Data/36data/2020-08-28/'
+ZPSX_DEST_DIR = 'E:/36Data/IQ_Data/2020-08-28/'
+
+SXDW_SOURCE_DIR = 'E:/36Data/sxdw/'
 
 # Days in 0001-01-01 : 2000-01-01
 DAYS_DELTA = 730119
 TABLE_ZPSX = 'zpsx'
+TABLE_SXDW = 'sxdw'
 
 PORT = 29000
 
@@ -16,9 +19,13 @@ PORT_DB = '5432'
 SERVER_IP = '127.0.0.1'
 DATABASE = 'test'
 
-# 定位结果数据到达时间前的秒数
-SECOND_BEFORE = 10
-SECOND_AFTER = 0
+# 定位结果到达时间前的秒数
+SECOND_BEFORE_SXDW = 10
+SECOND_AFTER_SXDW = 0
+
+# 中频数据到达时间后的秒数
+SECOND_BEFORE_INTERMEDIATE = 0
+SECOND_AFTER_INTERMEDIATE = 10
 
 # 信噪比估计
 EIG_THRESHOLD = 1e-5

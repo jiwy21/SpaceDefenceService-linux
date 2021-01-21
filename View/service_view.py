@@ -42,6 +42,17 @@ def intermediate_list_sxdw():
     return logic.list_intermediate_sxdw(seek_time)
 
 
+@app.route('/sxdw_list_intermediate', methods=['GET', 'POST'])
+@app.route('/sxdw_list_intermediate.json', methods=['GET', 'POST'])
+def sxdw_list_intermediate():
+    """
+    :return: 定位数据json列表
+    """
+    seek_time = request.args.get('time_seek')
+
+    logic = ServiceLogic()
+    return logic.list_sxdw_intermediate(seek_time)
+
 
 
 

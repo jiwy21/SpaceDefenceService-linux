@@ -27,15 +27,15 @@ else:
 I = []
 Q = []
 
-for file in os.listdir(cfg.SOURCE_DIR):
+for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
 
     print(file)
-    cur_dir = cfg.DEST_DIR + file.split('.')[0] + '/'
+    cur_dir = cfg.ZPSX_DEST_DIR + file.split('.')[0] + '/'
     if not os.path.exists(cur_dir):
         os.mkdir(cur_dir)
 
     # 文件路径
-    file_path = cfg.SOURCE_DIR + '/' + file
+    file_path = cfg.ZPSX_SOURCE_DIR + '/' + file
 
     with open(file_path, 'rb') as f:
 
