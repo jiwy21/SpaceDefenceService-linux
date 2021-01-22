@@ -1,10 +1,10 @@
 # -*- coding:utf-8 -*-
 
 
-ZPSX_SOURCE_DIR = 'E:/36Data/36data/2020-08-28/'
-ZPSX_DEST_DIR = 'E:/36Data/IQ_Data/2020-08-28/'
+ZPSX_SOURCE_DIR = 'D:/36Data/Intermediate/2020-06-18/'
+ZPSX_DEST_DIR = 'D:/36Data/IQ_Data/2020-06-18/'
 
-SXDW_SOURCE_DIR = 'E:/36Data/sxdw/'
+SXDW_SOURCE_DIR = 'D:/36Data/sxdw/'
 
 # Days in 0001-01-01 : 2000-01-01
 DAYS_DELTA = 730119

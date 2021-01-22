@@ -25,8 +25,8 @@ class ServiceDblink(object):
 
         # 编写sql语句
         sql = "select id, count, packages, satellite, arrival_time, duration, freq_down, \
-              freq_unit, iqlocation, iqlen, bitrate, coderate, bandwidth from zpsx where \
-              arrival_time between '%s' and '%s'" % (seek_start, seek_end)
+              freq_unit, iqlocation, iqlen, bitrate, coderate, bandwidth, fs_rate, snr, freq_carrier " \
+              "from zpsx where arrival_time between '%s' and '%s'" % (seek_start, seek_end)
 
         # 连接数据库
         conn = psycopg2.connect(database=cfg.DATABASE, user=cfg.USER, password=cfg.PASSWORD_DB,
@@ -42,7 +42,8 @@ class ServiceDblink(object):
             zpsxs_uni.append(IntermediateMeta(id=zpsx[0], count=zpsx[1], packages=zpsx[2], satellite=zpsx[3],
                                               arrival_time=zpsx[4], duration=zpsx[5], freq_down=zpsx[6],
                                               freq_unit=zpsx[7], iqlocation=zpsx[8], iqlen=zpsx[9], bitrate=zpsx[10],
-                                              coderate=zpsx[11], bandwidth=zpsx[12]))
+                                              coderate=zpsx[11], bandwidth=zpsx[12], fs_rate=zpsx[13], snr=zpsx[14],
+                                              freq_carrier=zpsx[15]))
 
         return zpsxs_uni
 
@@ -87,8 +88,8 @@ class ServiceDblink(object):
 
         # 编写sql语句
         sql = "select id, count, packages, satellite, arrival_time, duration, freq_down, \
-              freq_unit, iqlocation, iqlen, bitrate, coderate, bandwidth from zpsx where \
-              arrival_time between '%s' and '%s'" % (seek_time_before, seek_time_after)
+              freq_unit, iqlocation, iqlen, bitrate, coderate, bandwidth, fs_rate, snr, freq_carrier " \
+              "from zpsx where arrival_time between '%s' and '%s'" % (seek_time_before, seek_time_after)
 
         # 连接数据库
         conn = psycopg2.connect(database=cfg.DATABASE, user=cfg.USER, password=cfg.PASSWORD_DB,
@@ -104,7 +105,8 @@ class ServiceDblink(object):
             zpsxs_uni.append(IntermediateMeta(id=zpsx[0], count=zpsx[1], packages=zpsx[2], satellite=zpsx[3],
                                               arrival_time=zpsx[4], duration=zpsx[5], freq_down=zpsx[6],
                                               freq_unit=zpsx[7], iqlocation=zpsx[8], iqlen=zpsx[9], bitrate=zpsx[10],
-                                              coderate=zpsx[11], bandwidth=zpsx[12]))
+                                              coderate=zpsx[11], bandwidth=zpsx[12], fs_rate=zpsx[13], snr=zpsx[14],
+                                              freq_carrier=zpsx[15]))
 
         return zpsxs_uni
 
@@ -138,9 +140,14 @@ class ServiceDblink(object):
         # 格式化定位数据
         sxdws_uni = []
         for sxdw in sxdws:
-            sxdws_uni.append(SXDWMeta(sxdw[0], sxdw[1], sxdw[2], sxdw[3], sxdw[4], sxdw[5], sxdw[6], sxdw[7],
-                                      sxdw[8], sxdw[9], sxdw[10], sxdw[11], sxdw[12], sxdw[13], sxdw[14], sxdw[15],
-                                      sxdw[16], sxdw[17], sxdw[18], sxdw[19], sxdw[20], sxdw[21], sxdw[22], sxdw[23]))
+            sxdws_uni.append(SXDWMeta(id=sxdw[0], id_sxdw=sxdw[1], arrival_time=sxdw[2], freq_down=sxdw[3],
+                                      freq_down_unit=sxdw[4], batchnumber=sxdw[5], true_value_lon=sxdw[6],
+                                      true_value_lat=sxdw[7], true_value_error=sxdw[8], result_confidence=sxdw[9],
+                                      false_value_lon=sxdw[10], false_value_lat=sxdw[11], freq_up=sxdw[12],
+                                      freq_up_unit=sxdw[13], multi_access_mode=sxdw[14], modulate_pattern=sxdw[15],
+                                      code_mode=sxdw[16], bandwidth=sxdw[17], bandwidth_unit=sxdw[18], sps=sxdw[19],
+                                      sps_unit=sxdw[20], medial_sat_norad=sxdw[21], adjacent_sat_norad1=sxdw[22],
+                                      adjacent_sat_norad2=sxdw[23]))
 
         return sxdws_uni
 

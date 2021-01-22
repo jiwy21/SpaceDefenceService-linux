@@ -156,6 +156,9 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
                 snr = snr_estimate(signal)
                 print(snr)
 
+                # 频点（Hz）
+                freq_carrier = -1
+
                 # 打印输出
                 # print(file, count_resolved, sep=":")
                 # print("arrival_time: ", arrival_time, type(arrival_time))
@@ -174,9 +177,9 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
 
                 # 编写sql语句，连接数据库并写入数据
                 sql = "insert into zpsx (id, count, packages, satellite, duration, freq_down, freq_unit, iqlocation, iqlen, " \
-                      "bitrate, coderate, bandwidth, arrival_time) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', " \
-                      "'%s', '%s', '%s', '%s', '%s')" % (cur_id, count_resolved, packages_resolved, satellite_resolved, duration_resolved,
-                                                         down_freq, freq_unit_resolved, iqlocation, len(I), bit_rate, code_rate, band_width, arrival_time)
+                      "bitrate, coderate, bandwidth, arrival_time, fs_rate, snr, freq_carrier) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', " \
+                      "'%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (cur_id, count_resolved, packages_resolved, satellite_resolved, duration_resolved,
+                      down_freq, freq_unit_resolved, iqlocation, len(I), bit_rate, code_rate, band_width, arrival_time, fs_rate, snr, freq_carrier)
                 cur.execute(sql)
 
                 # IQ路数据落盘
