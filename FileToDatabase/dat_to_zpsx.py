@@ -8,6 +8,7 @@ import os
 import psycopg2
 import numpy as np
 from Utils.snr_estimate import snr_estimate
+from Utils.fc_bw_estimate import fc_bw_estimate
 
 
 # 编写sql语句，连接数据库并写入数据
@@ -109,6 +110,14 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
             # 若到达时隙数据末尾，则进行参数估计及解析入库
             if serial_resolved == packages_resolved:
 
+                # 如果包数太少，则不入库
+                if packages_resolved < cfg.MIN_PACKAGES:
+                    print('Alert too few packages, file: %s, count: %s, packages: %s'
+                          % (file, count_resolved, packages_resolved))
+                    I = []
+                    Q = []
+                    continue
+
                 # 日期（YYYY-mm-dd）
                 arrival_date = str(date.fromordinal(date_resolved + cfg.DAYS_DELTA))
 
@@ -154,10 +163,12 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
                 for i in range(len(I)):
                     signal.append(complex(I[i], Q[i]))
                 snr = snr_estimate(signal)
-                print(snr)
+                # print(snr)
 
                 # 频点（Hz）
-                freq_carrier = -1
+                [freq_carrier, band_width] = fc_bw_estimate(signal, fs_rate)
+                band_width = 25000
+                # print(freq_carrier)
 
                 # 打印输出
                 # print(file, count_resolved, sep=":")
@@ -176,8 +187,8 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
                 iqlocation = cur_dir + arrival_date + '_' + str(count_resolved) + '_' + str(cur_id) + '.npy'
 
                 # 编写sql语句，连接数据库并写入数据
-                sql = "insert into zpsx (id, count, packages, satellite, duration, freq_down, freq_unit, iqlocation, iqlen, " \
-                      "bitrate, coderate, bandwidth, arrival_time, fs_rate, snr, freq_carrier) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', " \
+                sql = "insert into %s (id, count, packages, satellite, duration, freq_down, freq_unit, iqlocation, iqlen, " \
+                      "bitrate, coderate, bandwidth, arrival_time, fs_rate, snr, freq_carrier)" % cfg.TABLE_ZPSX + " values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', " \
                       "'%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (cur_id, count_resolved, packages_resolved, satellite_resolved, duration_resolved,
                       down_freq, freq_unit_resolved, iqlocation, len(I), bit_rate, code_rate, band_width, arrival_time, fs_rate, snr, freq_carrier)
                 cur.execute(sql)
@@ -190,7 +201,10 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
                 I = []
                 Q = []
 
-conn.commit()
+    # 每一个文件处理完成向数据库提交一次
+    conn.commit()
+
+# 所有文件都处理完关闭数据库连接
 conn.close()
 
 

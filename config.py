@@ -1,14 +1,14 @@
 # -*- coding:utf-8 -*-
 
 
-ZPSX_SOURCE_DIR = 'D:/36Data/Intermediate/2020-06-18/'
-ZPSX_DEST_DIR = 'D:/36Data/IQ_Data/2020-06-18/'
+ZPSX_SOURCE_DIR = 'D:/36Data/Intermediate/2020-06-14/'
+ZPSX_DEST_DIR = 'D:/36Data/IQ_Data/2020-06-14/'
 
 SXDW_SOURCE_DIR = 'D:/36Data/sxdw/'
 
 # Days in 0001-01-01 : 2000-01-01
 DAYS_DELTA = 730119
-TABLE_ZPSX = 'zpsx'
+TABLE_ZPSX = 'zpsx_new'
 TABLE_SXDW = 'sxdw'
 
 PORT = 29000
@@ -28,11 +28,14 @@ SECOND_BEFORE_INTERMEDIATE = 0
 SECOND_AFTER_INTERMEDIATE = 10
 
 # 信噪比估计
-EIG_THRESHOLD = 1e-5
+EIG_THRESHOLD = 0
 N_SNR = 50
 K_SNR = 100
 
+# 载频估计
+FS_NFFT = 3
+N_FFT = 325800
 
-
-
+# 最小包数目
+MIN_PACKAGES = 50
 

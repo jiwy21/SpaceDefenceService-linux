@@ -26,7 +26,7 @@ class ServiceDblink(object):
         # 编写sql语句
         sql = "select id, count, packages, satellite, arrival_time, duration, freq_down, \
               freq_unit, iqlocation, iqlen, bitrate, coderate, bandwidth, fs_rate, snr, freq_carrier " \
-              "from zpsx where arrival_time between '%s' and '%s'" % (seek_start, seek_end)
+              "from %s where arrival_time between '%s' and '%s'" % (cfg.TABLE_ZPSX, seek_start, seek_end)
 
         # 连接数据库
         conn = psycopg2.connect(database=cfg.DATABASE, user=cfg.USER, password=cfg.PASSWORD_DB,
@@ -55,7 +55,7 @@ class ServiceDblink(object):
         """
 
         # 编写sql语句
-        sql = "select iqlocation from zpsx where id=%s" % id_zpsx
+        sql = "select iqlocation from %s where id=%s" % (cfg.TABLE_ZPSXk, id_zpsx)
 
         # 连接数据库
         conn = psycopg2.connect(database=cfg.DATABASE, user=cfg.USER, password=cfg.PASSWORD_DB,
@@ -89,7 +89,7 @@ class ServiceDblink(object):
         # 编写sql语句
         sql = "select id, count, packages, satellite, arrival_time, duration, freq_down, \
               freq_unit, iqlocation, iqlen, bitrate, coderate, bandwidth, fs_rate, snr, freq_carrier " \
-              "from zpsx where arrival_time between '%s' and '%s'" % (seek_time_before, seek_time_after)
+              "from %s where arrival_time between '%s' and '%s'" % (cfg.TABLE_ZPSX, seek_time_before, seek_time_after)
 
         # 连接数据库
         conn = psycopg2.connect(database=cfg.DATABASE, user=cfg.USER, password=cfg.PASSWORD_DB,
@@ -127,7 +127,7 @@ class ServiceDblink(object):
                       "true_value_lat, true_value_error, result_confidence, false_value_lon, false_value_lat," \
                       "freq_up, freq_up_unit, multi_access_mode, modulate_pattern, code_mode, bandwidth," \
                       "bandwidth_unit, sps, sps_unit, medial_sat_norad, adjacent_sat_norad1, adjacent_sat_norad2 " \
-                      "from sxdw where arrival_time between '%s' and '%s'" % (seek_time_before, seek_time_after)
+                      "from %s where arrival_time between '%s' and '%s'" % (cfg.TABLE_SXDW, seek_time_before, seek_time_after)
 
         # 连接数据库
         conn = psycopg2.connect(database=cfg.DATABASE, user=cfg.USER, password=cfg.PASSWORD_DB,

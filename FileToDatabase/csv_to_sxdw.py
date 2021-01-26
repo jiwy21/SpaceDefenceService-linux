@@ -87,10 +87,10 @@ for file in os.listdir(cfg.SXDW_SOURCE_DIR):
                 arrival_time = sxdw[1] + ' ' + sxdw[2]
 
                 # 编写sql语句，连接数据库并写入数据
-                sql = "insert into sxdw (id, id_sxdw, arrival_time, freq_down, freq_down_unit, batchnumber, true_value_lon, "\
+                sql = "insert into %s (id, id_sxdw, arrival_time, freq_down, freq_down_unit, batchnumber, true_value_lon, "\
                           "true_value_lat, true_value_error, result_confidence, false_value_lon, false_value_lat," \
                           "freq_up, freq_up_unit, multi_access_mode, modulate_pattern, code_mode, bandwidth," \
-                          "bandwidth_unit, sps, sps_unit, medial_sat_norad, adjacent_sat_norad1, adjacent_sat_norad2) " \
+                          "bandwidth_unit, sps, sps_unit, medial_sat_norad, adjacent_sat_norad1, adjacent_sat_norad2) " % cfg.TABLE_SXDW + \
                           "values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', " \
                           "'%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (cur_id, id_sxdw, arrival_time,
                           freq_down, freq_down_unit, batchnumber, true_value_lon, true_value_lat, true_value_error, result_confidence,

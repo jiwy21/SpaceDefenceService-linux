@@ -77,14 +77,14 @@ def snr_estimate(signal, n=cfg.N_SNR, k=cfg.K_SNR):
 
     # 噪声能量
     sigma2 = 0
-    for i in range(p + 1, n_short):
+    for i in range(p, n_short):
         sigma2 += b[i]
-    sigma2 /= (n - p)
-    pw = n * sigma2
+    sigma2 /= (n_short - p)
+    pw = n_short * sigma2
 
     # 信号能量
     ps = 0
-    for i in range(0, p + 1):
+    for i in range(0, p):
         ps += (b[i] - sigma2)
 
     # 信噪比估计
