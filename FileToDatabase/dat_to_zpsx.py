@@ -111,12 +111,12 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
             if serial_resolved == packages_resolved:
 
                 # 如果包数太少，则不入库
-                if packages_resolved < cfg.MIN_PACKAGES:
-                    print('Alert too few packages, file: %s, count: %s, packages: %s'
-                          % (file, count_resolved, packages_resolved))
-                    I = []
-                    Q = []
-                    continue
+                # if packages_resolved < cfg.MIN_PACKAGES:
+                #     print('Alert too few packages, file: %s, count: %s, packages: %s'
+                #           % (file, count_resolved, packages_resolved))
+                #     I = []
+                #     Q = []
+                #     continue
 
                 # 日期（YYYY-mm-dd）
                 arrival_date = str(date.fromordinal(date_resolved + cfg.DAYS_DELTA))
@@ -156,18 +156,23 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
                 # 带宽（Hz）
                 # alpha = 0.16  # alpha为低通滤波器滚降系数，取值一般不小于0.15
                 # band_width = (1 + alpha) * code_rate
-                band_width = -1
+                band_width = 25000
 
                 # 信噪比（dB）
                 signal = []
                 for i in range(len(I)):
                     signal.append(complex(I[i], Q[i]))
-                snr = snr_estimate(signal)
+                if len(signal) < cfg.N_SNR * cfg.K_SNR:
+                    snr = -1
+
+                    print('Alert too few packages, file: %s, count: %s, packages: %s'
+                          % (file, count_resolved, packages_resolved))
+                else:
+                    snr = snr_estimate(signal)
                 # print(snr)
 
                 # 频点（Hz）
-                [freq_carrier, band_width] = fc_bw_estimate(signal, fs_rate)
-                band_width = 25000
+                [freq_carrier, band_width_x] = fc_bw_estimate(signal, fs_rate)
                 # print(freq_carrier)
 
                 # 打印输出

@@ -55,7 +55,7 @@ class ServiceDblink(object):
         """
 
         # 编写sql语句
-        sql = "select iqlocation from %s where id=%s" % (cfg.TABLE_ZPSXk, id_zpsx)
+        sql = "select iqlocation from %s where id=%s" % (cfg.TABLE_ZPSX, id_zpsx)
 
         # 连接数据库
         conn = psycopg2.connect(database=cfg.DATABASE, user=cfg.USER, password=cfg.PASSWORD_DB,

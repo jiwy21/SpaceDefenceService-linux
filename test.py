@@ -1,20 +1,43 @@
 
 
-# from Utils.io import item_to_map
-#
-#
-#
-# a = [0, 1, 2]
-# b = item_to_map(a)
-# print(b)
+# -*- coding:utf-8 -*-
 
-import datetime
 
-str = '2020-06-18 23:34:07'
-str2date = datetime.strptime(str, "%Y-%m-%d %H:%M:%S")
-print(str2date.timedelta(days=-1))
+import numpy as np
+import matplotlib.pyplot as plt
 
-a = datetime(str)
+import pywt
+import pywt.data
+
+
+# Load image
+original = pywt.data.camera()
+
+# Wavelet transform of image, and plot approximation and details
+titles = ['Approximation', ' Horizontal detail',
+          'Vertical detail', 'Diagonal detail']
+coeffs2 = pywt.dwt2(original, 'bior1.3')
+LL, (LH, HL, HH) = coeffs2
+fig = plt.figure(figsize=(12, 3))
+for i, a in enumerate([LL, LH, HL, HH]):
+    ax = fig.add_subplot(1, 4, i + 1)
+    ax.imshow(a, interpolation="nearest", cmap=plt.cm.gray)
+    ax.set_title(titles[i], fontsize=10)
+    ax.set_xticks([])
+    ax.set_yticks([])
+
+fig.tight_layout()
+plt.show()
+
+pywt.dwt()
+
+
+
+
+
+
+
+
 
 
 

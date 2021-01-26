@@ -4,9 +4,7 @@
 from numpy.fft import fft
 import numpy as np
 from scipy import signal
-import matplotlib.pyplot as plt
 import os
-from matplotlib.pyplot import psd
 import pandas as pd
 import config as cfg
 
