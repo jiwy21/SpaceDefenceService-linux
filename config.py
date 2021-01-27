@@ -39,3 +39,6 @@ N_FFT = 325800
 # 最小包数目
 MIN_PACKAGES = 50
 
+# 小波变换尺度
+SCALE = 30
+

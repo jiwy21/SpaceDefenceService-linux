@@ -9,6 +9,7 @@ import psycopg2
 import numpy as np
 from Utils.snr_estimate import snr_estimate
 from Utils.fc_bw_estimate import fc_bw_estimate
+from Utils.code_rate_estimate import code_rate_estimate
 
 
 # 编写sql语句，连接数据库并写入数据
@@ -148,11 +149,6 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
                 # 采样率（Hz）
                 fs_rate = bit_rate / (4 * 8)
 
-                # 码速率（Hz）
-                # m = 4  # m为单位码元对应的比特数，调制方式为QPSK时，m = 4
-                # code_rate = bit_rate / (math.log(m) / math.log(2))
-                code_rate = -1
-
                 # 带宽（Hz）
                 # alpha = 0.16  # alpha为低通滤波器滚降系数，取值一般不小于0.15
                 # band_width = (1 + alpha) * code_rate
@@ -174,6 +170,12 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
                 # 频点（Hz）
                 [freq_carrier, band_width_x] = fc_bw_estimate(signal, fs_rate)
                 # print(freq_carrier)
+
+                # 码速率（Hz）
+                # m = 4  # m为单位码元对应的比特数，调制方式为QPSK时，m = 4
+                # code_rate = bit_rate / (math.log(m) / math.log(2))
+                code_rate = code_rate_estimate(iq=signal, a=cfg.SCALE, fs=fs_rate)
+                print(code_rate)
 
                 # 打印输出
                 # print(file, count_resolved, sep=":")
@@ -199,15 +201,15 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
                 cur.execute(sql)
 
                 # IQ路数据落盘
-                IQ = [I, Q]
-                IQ_np = np.array(IQ)
-                np.save(iqlocation, IQ_np)
+                # IQ = [I, Q]
+                # IQ_np = np.array(IQ)
+                # np.save(iqlocation, IQ_np)
 
                 I = []
                 Q = []
 
     # 每一个文件处理完成向数据库提交一次
-    conn.commit()
+    # conn.commit()
 
 # 所有文件都处理完关闭数据库连接
 conn.close()
