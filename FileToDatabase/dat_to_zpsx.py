@@ -147,7 +147,7 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
                 bit_rate = float('%.4f' % bit_rate)
 
                 # 采样率（Hz）
-                fs_rate = bit_rate / (4 * 8)
+                fs_rate = ((packages_resolved - 1) * 128 + length_resolved / 8) / (duration_resolved * 1e-4)
 
                 # 带宽（Hz）
                 # alpha = 0.16  # alpha为低通滤波器滚降系数，取值一般不小于0.15

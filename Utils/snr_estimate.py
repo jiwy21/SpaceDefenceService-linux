@@ -3,6 +3,7 @@
 
 import numpy as np
 import config as cfg
+import random
 
 
 def mdl(l, b, n, k):
@@ -129,21 +130,66 @@ def sin_wave(A, f, fs, phi, t):
 
 if __name__ == '__main__':
 
-    f = 50
-    t = 1
-    fs = 500000
-    Ts = 1 / fs
-    n = np.arange(t / Ts)
-    y = np.sin(2 * np.pi * f * n * Ts)
+    # f = 50
+    # t = 1
+    # fs = 500000
+    # Ts = 1 / fs
+    # n = np.arange(t / Ts)
+    # y = np.sin(2 * np.pi * f * n * Ts)
+
+    N = 50
+    bit_rate = 1
+    fc = 2
+    fs = 100
+
+    # 生成比特流
+    bit_stream = []
+    for i in range(0, N):
+        bit = random.randint(0, 1)
+        bit = 2 * bit - 1
+        bit_stream.append(bit)
+
+    # 生成IQ两路数据
+    I = []
+    Q = []
+    for i in range(0, N):
+        if i % 2 == 0:
+            I.append(bit_stream[i])
+        else:
+            Q.append(bit_stream[i])
+
+    # 生成基带信号（加采样）
+    bit_data = []
+    for i in range(0, N):
+        bit_data.append([bit_stream[i]] * (fs // bit_rate))
+    I_data = []
+    Q_data = []
+    for i in range(0, N // 2):
+        I_data.append([I[i]] * (2 * fs // bit_rate))
+        Q_data.append([Q[i]] * (2 * fs // bit_rate))
+
+    # 生成中频信号（加载波）
+    I_carrier = []
+    Q_carrier = []
+    t_bit = np.linspace(0, 2 // bit_rate, 2 // bit_rate * fs, endpoint=False)
+    for i in range(0, N // 2):
+        I_carrier.extend((I[i] * np.cos(2 * np.pi * fc * t_bit)).tolist())
+        Q_carrier.extend((Q[i] * np.cos(2 * np.pi * fc * t_bit + np.pi / 2)).tolist())
 
     # 加入高斯白噪声(dB)
     snr = 40
-    y_noise = awgn(y, snr)
+    I_noise = awgn(np.array(I_carrier), snr)
+    Q_noise = awgn(np.array(Q_carrier), snr + 100)
 
     # plt.plot(y_noise)
     # plt.show()
 
-    print(snr_estimate(y_noise))
+    # 生成复信号
+    sig = []
+    for i in range(len(I_noise)):
+        sig.append(complex(I_noise[i], Q_noise[i]))
+
+    print(snr_estimate(sig))
 
 
 
