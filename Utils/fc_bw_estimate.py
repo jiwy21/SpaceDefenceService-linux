@@ -9,6 +9,9 @@ import pandas as pd
 import config as cfg
 import matplotlib.pyplot as plt
 import random
+import numpy as np
+from scipy.signal import butter, lfilter, freqz
+import matplotlib.pyplot as plt
 
 
 def fc_bw_estimate(iq, fs):
@@ -33,6 +36,8 @@ def fc_bw_estimate(iq, fs):
 
     # 载频估计
     argmax_power_spectrum = np.argmax(power_spectrum)
+    plt.plot(power_spectrum)
+    plt.show()
     fc = argmax_power_spectrum * fs / n_fft
 
     # 中值滤波
@@ -49,6 +54,17 @@ def fc_bw_estimate(iq, fs):
 
     return [fc, bw]
 
+def butter_lowpass(cutoff, fs, order=5):
+    nyq = 0.5 * fs
+    normal_cutoff = cutoff / nyq
+    b, a = butter(order, normal_cutoff, btype='low', analog=False)
+    return b, a
+
+
+def butter_lowpass_filter(data, cutoff, fs, order=5):
+    b, a = butter_lowpass(cutoff, fs, order=order)
+    y = lfilter(b, a, data)
+    return y  # Filter requirements.
 
 if __name__ == '__main__':
 
@@ -101,11 +117,22 @@ if __name__ == '__main__':
         Q_carrier.extend((Q[i] * np.cos(2 * np.pi * fc * t_bit + np.pi / 2)).tolist())
 
     # 生成复信号
-    sig = []
-    for i in range(len(I_carrier)):
-        sig.append(complex(I_carrier[i], Q_carrier[i]))
+    # sig = []
+    # for i in range(len(I_carrier)):
+    #     sig.append(complex(I_carrier[i], Q_carrier[i]))
 
-    fc_bw = fc_bw_estimate(sig, fs)
+    # 生成复信号并进行频谱搬移
+    n = len(I_carrier)
+    sigs = []
+    t = np.linspace(0, n // fs, n, endpoint=False)
+    for i in range(n):
+        sig = complex(I_carrier[i], Q_carrier[i])
+        sig *= np.exp(complex(0, 2 * np.pi * fc * t[i]))
+        sigs.append(sig)
+        
+    sigs_filtered = butter_lowpass_filter(sigs, fc, fs)
+
+    fc_bw = fc_bw_estimate(sigs_filtered, fs)
     fc = fc_bw[0]
     bw = fc_bw[1]
     print(fc, bw)

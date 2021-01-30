@@ -15,6 +15,9 @@ from scipy import signal
 from numpy.fft import fft
 import config as cfg
 import random
+import numpy as np
+from scipy.signal import butter, lfilter, freqz
+import matplotlib.pyplot as plt
 
 
 def code_rate_estimate(iq, a, fs, n_fft=cfg.N_FFT):
@@ -54,12 +57,25 @@ def code_rate_estimate(iq, a, fs, n_fft=cfg.N_FFT):
     return baud_rate
 
 
+def butter_lowpass(cutoff, fs, order=5):
+    nyq = 0.5 * fs
+    normal_cutoff = cutoff / nyq
+    b, a = butter(order, normal_cutoff, btype='low', analog=False)
+    return b, a
+
+
+def butter_lowpass_filter(data, cutoff, fs, order=5):
+    b, a = butter_lowpass(cutoff, fs, order=order)
+    y = lfilter(b, a, data)
+    return y  # Filter requirements.
+
+
 if __name__ == '__main__':
 
     N = 2000
-    bit_rate = 1
+    bit_rate = 2
     fc = 2
-    fs = 100
+    fs = 1000
 
     # 生成比特流
     bit_stream = []
@@ -104,7 +120,9 @@ if __name__ == '__main__':
         sig *= np.exp(complex(0, 2 * np.pi * fc * t[i]))
         sigs.append(sig)
 
-    code_rate = code_rate_estimate(sigs, 100, fs, 50000)
+    sigs_filtered = butter_lowpass_filter(sigs, fc, fs)
+
+    code_rate = code_rate_estimate(sigs_filtered, 100, fs, 50000)
     print(code_rate)
 
     # fs = 900000
