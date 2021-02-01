@@ -26,7 +26,7 @@ def code_rate_estimate(iq, a, fs, n_fft=cfg.N_FFT):
     :param fs: sample rate
     :return:
     """
-    iq = np.real(np.array(iq, dtype=complex))
+    iq = np.imag(np.array(iq, dtype=complex))
     X = np.abs(cwt(iq, a, 'cgau8', len(iq))[0][0])
 
     max_points = signal.argrelextrema(X, np.greater)[0]
@@ -47,6 +47,8 @@ def code_rate_estimate(iq, a, fs, n_fft=cfg.N_FFT):
 
     # 对微分结果进行fft变换
     diff_fft = np.abs(fft(diff_points, n_fft)[:n_fft // 2])
+    plt.plot(diff_fft)
+    plt.show()
 
     # 查找对应位置序号
     K = np.argmax(diff_fft)
@@ -72,9 +74,9 @@ def butter_lowpass_filter(data, cutoff, fs, order=5):
 
 if __name__ == '__main__':
 
-    N = 2000
-    bit_rate = 2
-    fc = 2
+    N = 40000
+    bit_rate = 40
+    fc = 40
     fs = 1000
 
     # 生成比特流
@@ -106,7 +108,7 @@ if __name__ == '__main__':
     # 生成中频信号（加载波）
     I_carrier = []
     Q_carrier = []
-    t_bit = np.linspace(0, 2 // bit_rate, 2 // bit_rate * fs, endpoint=False)
+    t_bit = np.linspace(0, 1 / bit_rate, int(1 / bit_rate * fs), endpoint=False)
     for i in range(0, N // 2):
         I_carrier.extend((I[i] * np.cos(2 * np.pi * fc * t_bit)).tolist())
         Q_carrier.extend((Q[i] * np.cos(2 * np.pi * fc * t_bit + np.pi / 2)).tolist())
@@ -117,12 +119,12 @@ if __name__ == '__main__':
     t = np.linspace(0, n // fs, n, endpoint=False)
     for i in range(n):
         sig = complex(I_carrier[i], Q_carrier[i])
-        sig *= np.exp(complex(0, 2 * np.pi * fc * t[i]))
+        # sig *= np.exp(complex(0, 2 * np.pi * fc * t[i]))
         sigs.append(sig)
 
-    sigs_filtered = butter_lowpass_filter(sigs, fc, fs)
+    # sigs_filtered = butter_lowpass_filter(sigs, fc, fs)
 
-    code_rate = code_rate_estimate(sigs_filtered, 100, fs, 50000)
+    code_rate = code_rate_estimate(sigs, 50, fs, 50000)
     print(code_rate)
 
     # fs = 900000

@@ -34,11 +34,11 @@ K_SNR = 100
 
 # 载频估计
 FS_NFFT = 3
-N_FFT = 325800
+N_FFT = 100000
 
 # 最小包数目
 MIN_PACKAGES = 50
 
 # 小波变换尺度
-SCALE = 30
+SCALE = 10
 

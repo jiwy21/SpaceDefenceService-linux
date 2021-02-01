@@ -12,6 +12,7 @@ import random
 import numpy as np
 from scipy.signal import butter, lfilter, freqz
 import matplotlib.pyplot as plt
+from scipy.fftpack import hilbert
 
 
 def fc_bw_estimate(iq, fs):
@@ -27,32 +28,39 @@ def fc_bw_estimate(iq, fs):
     n_fft = cfg.N_FFT
 
     X = np.abs(fft(iq, n_fft))
-    X_2 = X**2 / n_fft
+    X2 = X**2 / n_fft
+    X2_fft = X2[:n_fft // 2]
 
-    power_spectrum = 10 * np.log10(X_2[:n_fft // 2])
+    power_spectrum = 10 * np.log10(X2_fft)
+
+    h_power_spectrum = hilbert(power_spectrum)
+    env_power_spectrum = np.sqrt(power_spectrum ** 2 + h_power_spectrum ** 2)
 
     # plt.plot(power_spectrum)
     # plt.show()
 
     # 载频估计
     argmax_power_spectrum = np.argmax(power_spectrum)
-    plt.plot(power_spectrum)
-    plt.show()
+    # plt.plot(power_spectrum)
+    # plt.show()
     fc = argmax_power_spectrum * fs / n_fft
 
+    fc_mean = np.sum(X2_fft * np.linspace(0, n_fft // 2, n_fft // 2, endpoint=False)) / np.sum(X2_fft)
+    bw = np.sum(X2_fft * np.abs(np.linspace(0, n_fft // 2, n_fft // 2, endpoint=False) - argmax_power_spectrum)) / np.sum(X2_fft)
+    band_width = bw * fs / n_fft
     # 中值滤波
     power_spectrum_filt = signal.medfilt(power_spectrum, kernel_size=3)
 
     # 带宽边界值估计
-    kl = kr = argmax_power_spectrum
-    while (power_spectrum_filt[kl] > power_spectrum_filt[argmax_power_spectrum] - 3) and (kl >= 0):
-        kl -= 1
-    while (power_spectrum_filt[kr] > power_spectrum_filt[argmax_power_spectrum] - 3) and (kr < len(power_spectrum_filt)):
-        kr += 1
-    deltawidth = kr - kl
-    bw = deltawidth * fs / n_fft
+    # kl = kr = argmax_power_spectrum
+    # while (power_spectrum_filt[kl] > power_spectrum_filt[argmax_power_spectrum] - 3) and (kl >= 0):
+    #     kl -= 1
+    # while (power_spectrum_filt[kr] > power_spectrum_filt[argmax_power_spectrum] - 3) and (kr < len(power_spectrum_filt)):
+    #     kr += 1
+    # deltawidth = kr - kl
+    # bw = deltawidth * fs / n_fft
 
-    return [fc, bw]
+    return [fc, band_width]
 
 def butter_lowpass(cutoff, fs, order=5):
     nyq = 0.5 * fs
@@ -127,12 +135,12 @@ if __name__ == '__main__':
     t = np.linspace(0, n // fs, n, endpoint=False)
     for i in range(n):
         sig = complex(I_carrier[i], Q_carrier[i])
-        sig *= np.exp(complex(0, 2 * np.pi * fc * t[i]))
+        sig *= np.exp(complex(0, 2 * np.pi * fc * 10 * t[i]))
         sigs.append(sig)
         
-    sigs_filtered = butter_lowpass_filter(sigs, fc, fs)
+    # sigs_filtered = butter_lowpass_filter(sigs, fc, fs)
 
-    fc_bw = fc_bw_estimate(sigs_filtered, fs)
+    fc_bw = fc_bw_estimate(sigs, fs)
     fc = fc_bw[0]
     bw = fc_bw[1]
     print(fc, bw)
