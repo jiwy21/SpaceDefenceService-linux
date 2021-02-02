@@ -175,7 +175,7 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
                 # m = 4  # m为单位码元对应的比特数，调制方式为QPSK时，m = 4
                 # code_rate = bit_rate / (math.log(m) / math.log(2))
                 code_rate = code_rate_estimate(iq=signal, a=cfg.SCALE, fs=fs_rate)
-                print(code_rate)
+                # print(code_rate)
 
                 # 打印输出
                 # print(file, count_resolved, sep=":")
@@ -209,7 +209,7 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
                 Q = []
 
     # 每一个文件处理完成向数据库提交一次
-    # conn.commit()
+    conn.commit()
 
 # 所有文件都处理完关闭数据库连接
 conn.close()

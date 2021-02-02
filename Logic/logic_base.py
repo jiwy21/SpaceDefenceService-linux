@@ -3,7 +3,7 @@
 
 import flask
 
-from Utils.io import item_to_map
+from Utils.io_bs import item_to_map
 
 
 class LogicBase(object):

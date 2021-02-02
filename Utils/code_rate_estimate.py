@@ -18,6 +18,8 @@ import random
 import numpy as np
 from scipy.signal import butter, lfilter, freqz
 import matplotlib.pyplot as plt
+from scipy.fftpack import hilbert
+from scipy.interpolate import interp1d
 
 
 def code_rate_estimate(iq, a, fs, n_fft=cfg.N_FFT):
@@ -47,11 +49,19 @@ def code_rate_estimate(iq, a, fs, n_fft=cfg.N_FFT):
 
     # 对微分结果进行fft变换
     diff_fft = np.abs(fft(diff_points, n_fft)[:n_fft // 2])
-    plt.plot(diff_fft)
-    plt.show()
+    # diff_fft -= np.mean(diff_fft)
+    # diff_fft_hilbert = np.abs(hilbert(diff_fft))
+    #
+    # plt.plot(diff_fft)
+    # plt.plot(diff_fft_hilbert)
+    # plt.show()
+
+    # 求取第一个极大峰值
+    p_points = signal.argrelextrema(diff_fft, np.greater, order=cfg.MAX_ORDER)[0]
+    K = p_points[0]
 
     # 查找对应位置序号
-    K = np.argmax(diff_fft)
+    # K = np.argmax(diff_fft)
 
     # 计算波特率
     baud_rate = K * fs / n_fft

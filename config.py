@@ -8,7 +8,7 @@ SXDW_SOURCE_DIR = 'D:/36Data/sxdw/'
 
 # Days in 0001-01-01 : 2000-01-01
 DAYS_DELTA = 730119
-TABLE_ZPSX = 'zpsx_new'
+TABLE_ZPSX = 'zpsx'
 TABLE_SXDW = 'sxdw'
 
 PORT = 29000
@@ -32,13 +32,16 @@ EIG_THRESHOLD = 0
 N_SNR = 50
 K_SNR = 100
 
-# 载频估计
+# frequency_rate estimate
 FS_NFFT = 3
 N_FFT = 100000
 
 # 最小包数目
 MIN_PACKAGES = 50
 
+# code_rate
 # 小波变换尺度
 SCALE = 10
+# 极大值阶数
+MAX_ORDER = 300
 
