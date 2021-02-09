@@ -1,8 +1,8 @@
 # -*- coding:utf-8 -*-
 
 
-ZPSX_SOURCE_DIR = 'D:/36Data/Intermediate/2020-06-17/'
-ZPSX_DEST_DIR = 'D:/36Data/IQ_Data/2020-06-17/'
+ZPSX_SOURCE_DIR = 'D:/36Data/Intermediate/2020-06-12/'
+ZPSX_DEST_DIR = 'D:/36Data/IQ_Data/2020-06-12/'
 
 SXDW_SOURCE_DIR = 'D:/36Data/sxdw/'
 
@@ -44,4 +44,13 @@ MIN_PACKAGES = 50
 SCALE = 10
 # 极大值阶数
 MAX_ORDER = 300
+
+
+# 调制识别阈值
+AMP_THRESHOLD = 100
+ASK_THRESHOLD = 10
+FSK_THRESHOLD = 5
+
+
+
 

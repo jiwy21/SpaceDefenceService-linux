@@ -22,64 +22,82 @@ from scipy.fftpack import hilbert
 from scipy.interpolate import interp1d
 
 
-def code_rate_estimate(iq, a, fs, n_fft=cfg.N_FFT):
+
+def r_max_cal(iq, n_fft=cfg.N_FFT):
     """
-    :param iq: original signal
-    :param fs: sample rate
+    :param iq: input signal
     :return:
     """
-    iq = np.imag(np.array(iq, dtype=complex))
-    X = np.abs(cwt(iq, a, 'cgau8', len(iq))[0][0])
+    amplitude = np.abs(iq[:20000])
 
-    max_points = signal.argrelextrema(X, np.greater)[0]
-    min_points = signal.argrelextrema(-X, np.greater)[0]
-    extreme_points = max_points.tolist() + min_points.tolist()
-    extreme_points.sort()
+    sum = np.sum(amplitude)
+    ns = len(amplitude)
+    mean = sum / ns
 
-    # 求极大极小值点
-    # 基于极值点求微分
-    diff_points = np.zeros(len(X))
-    if extreme_points[0] == max_points[0]:
-        diff_points[max_points[0]] = X[max_points[0]]
+    amplitude_norm = amplitude / mean - 1
+    amplitude_norm_fft = np.abs(fft(amplitude_norm, n_fft))
+    r_max = np.max(amplitude_norm_fft ** 2) / ns
+    r_max_log = np.log10(r_max)
+
+    return r_max
+
+
+def us42_cal(iq):
+    """
+    :param iq: input signal
+    :return:
+    """
+
+    return 0
+
+
+def uf42_cal(iq):
+    """
+    :param iq: input signal
+    :return:
+    """
+
+    return 0
+
+
+def mod_recognition(iq, n_fft=cfg.N_FFT):
+    """
+    :param iq: input signal
+    :return:
+    """
+
+    r_max = r_max_cal(iq, n_fft)
+    print(r_max)
+
+    if r_max >= cfg.AMP_THRESHOLD:
+
+        us42 = us42_cal(iq)
+        if us42 > cfg.ASK_THRESHOLD:
+            return 'ASK'
+        else:
+            return 'QAM'
+
     else:
-        diff_points[min_points[0]] = -X[min_points[0]]
 
-    for i in range(1, len(extreme_points)):
-        diff_points[extreme_points[i]] = X[extreme_points[i]] - X[extreme_points[i - 1]]
-
-    # 对微分结果进行fft变换
-    diff_fft = np.abs(fft(diff_points, n_fft)[:n_fft // 2])
-    # diff_fft -= np.mean(diff_fft)
-    # diff_fft_hilbert = np.abs(hilbert(diff_fft))
-    #
-    # plt.plot(diff_fft)
-    # plt.plot(diff_fft_hilbert)
-    # plt.show()
-
-    # 求取第一个极大峰值
-    p_points = signal.argrelextrema(diff_fft, np.greater, order=cfg.MAX_ORDER)[0]
-    K = p_points[0]
-
-    # 查找对应位置序号
-    # K = np.argmax(diff_fft)
-
-    # 计算波特率
-    baud_rate = K * fs / n_fft
-
-    return baud_rate
+        uf42 = uf42_cal(iq)
+        if uf42 < cfg.FSK_THRESHOLD:
+            return 'FSK'
+        else:
+            return 'PSK'
 
 
-def butter_lowpass(cutoff, fs, order=5):
-    nyq = 0.5 * fs
-    normal_cutoff = cutoff / nyq
-    b, a = butter(order, normal_cutoff, btype='low', analog=False)
-    return b, a
 
 
-def butter_lowpass_filter(data, cutoff, fs, order=5):
-    b, a = butter_lowpass(cutoff, fs, order=order)
-    y = lfilter(b, a, data)
-    return y  # Filter requirements.
+
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == '__main__':
@@ -134,8 +152,8 @@ if __name__ == '__main__':
 
     # sigs_filtered = butter_lowpass_filter(sigs, fc, fs)
 
-    code_rate = code_rate_estimate(sigs, 20, fs, 50000)
-    print(code_rate)
+    mod = mod_recognition(sigs)
+    print()
 
     # fs = 900000
     # a = 30
@@ -162,31 +180,6 @@ if __name__ == '__main__':
     #
     # df = pd.DataFrame({'code_rates': code_rates})
     # df.to_csv('test_fs_3.csv', index=False)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

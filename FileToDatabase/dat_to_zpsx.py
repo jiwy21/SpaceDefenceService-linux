@@ -10,6 +10,8 @@ import numpy as np
 from Utils.snr_estimate import snr_estimate
 from Utils.fc_bw_estimate import fc_bw_estimate
 from Utils.code_rate_estimate import code_rate_estimate
+from Utils.mod_recognition import mod_recognition
+import matplotlib.pyplot as plt
 
 
 # 编写sql语句，连接数据库并写入数据
@@ -177,6 +179,9 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
                 code_rate = code_rate_estimate(iq=signal, a=cfg.SCALE, fs=fs_rate)
                 # print(code_rate)
 
+                # 调制模式
+                modulation_mode = mod_recognition(iq=signal)
+
                 # 打印输出
                 # print(file, count_resolved, sep=":")
                 # print("arrival_time: ", arrival_time, type(arrival_time))
@@ -205,11 +210,19 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
                 # IQ_np = np.array(IQ)
                 # np.save(iqlocation, IQ_np)
 
+                # IQ数据展示
+                plt.figure()
+                plt.subplot(2, 1, 1)
+                plt.plot(I)
+                plt.subplot(2, 1, 2)
+                plt.plot(Q)
+                plt.show()
+
                 I = []
                 Q = []
 
     # 每一个文件处理完成向数据库提交一次
-    conn.commit()
+    # conn.commit()
 
 # 所有文件都处理完关闭数据库连接
 conn.close()
