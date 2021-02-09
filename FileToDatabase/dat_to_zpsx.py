@@ -180,7 +180,7 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
                 # print(code_rate)
 
                 # 调制模式
-                modulation_mode = mod_recognition(iq=signal)
+                # modulation_mode = mod_recognition(iq=signal)
 
                 # 打印输出
                 # print(file, count_resolved, sep=":")
@@ -211,12 +211,12 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
                 # np.save(iqlocation, IQ_np)
 
                 # IQ数据展示
-                plt.figure()
-                plt.subplot(2, 1, 1)
-                plt.plot(I)
-                plt.subplot(2, 1, 2)
-                plt.plot(Q)
-                plt.show()
+                # plt.figure()
+                # plt.subplot(2, 1, 1)
+                # plt.plot(I)
+                # plt.subplot(2, 1, 2)
+                # plt.plot(Q)
+                # plt.show()
 
                 I = []
                 Q = []
