@@ -28,16 +28,16 @@ def r_max_cal(iq, n_fft=cfg.N_FFT):
     :param iq: input signal
     :return:
     """
-    amplitude = np.abs(iq[:20000])
 
-    sum = np.sum(amplitude)
-    ns = len(amplitude)
-    mean = sum / ns
+    amplitude = np.abs(iq)
+
+    mean = np.mean(amplitude)
 
     amplitude_norm = amplitude / mean - 1
+    amplitude_norm /= np.max(np.abs(amplitude_norm))
     amplitude_norm_fft = np.abs(fft(amplitude_norm, n_fft))
-    r_max = np.max(amplitude_norm_fft ** 2) / ns
-    r_max_log = np.log10(r_max)
+    r_max = np.max(amplitude_norm_fft ** 2) / len(amplitude)
+    r_max_dB = 10 * np.log10(r_max)
 
     return r_max
 
@@ -138,8 +138,11 @@ if __name__ == '__main__':
     Q_carrier = []
     t_bit = np.linspace(0, 1 / bit_rate, int(1 / bit_rate * fs), endpoint=False)
     for i in range(0, N // 2):
-        I_carrier.extend((I[i] * np.cos(2 * np.pi * fc * t_bit)).tolist())
-        Q_carrier.extend((Q[i] * np.cos(2 * np.pi * fc * t_bit + np.pi / 2)).tolist())
+        # I_carrier.extend((I[i] * np.cos(2 * np.pi * fc * t_bit)).tolist())
+        # Q_carrier.extend((Q[i] * np.cos(2 * np.pi * fc * t_bit + np.pi / 2)).tolist())
+
+        I_carrier.extend((np.cos(2 * np.pi * I[i] * fc * t_bit)).tolist())
+        Q_carrier.extend((np.cos(2 * np.pi * Q[i] * fc * t_bit + np.pi / 2)).tolist())
 
     # 生成复信号并进行频谱搬移
     n = len(I_carrier)
@@ -152,7 +155,7 @@ if __name__ == '__main__':
 
     # sigs_filtered = butter_lowpass_filter(sigs, fc, fs)
 
-    mod = mod_recognition(sigs)
+    mod = mod_recognition(sigs, n_fft=500000)
     print()
 
     # fs = 900000

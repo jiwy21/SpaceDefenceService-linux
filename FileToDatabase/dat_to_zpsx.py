@@ -113,6 +113,8 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
             # 若到达时隙数据末尾，则进行参数估计及解析入库
             if serial_resolved == packages_resolved:
 
+
+
                 # 如果包数太少，则不入库
                 # if packages_resolved < cfg.MIN_PACKAGES:
                 #     print('Alert too few packages, file: %s, count: %s, packages: %s'
@@ -180,7 +182,7 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
                 # print(code_rate)
 
                 # 调制模式
-                # modulation_mode = mod_recognition(iq=signal)
+                # modulation_mode = mod_recognition(iq=signal[:10000])
 
                 # 打印输出
                 # print(file, count_resolved, sep=":")
@@ -211,12 +213,12 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
                 # np.save(iqlocation, IQ_np)
 
                 # IQ数据展示
-                # plt.figure()
-                # plt.subplot(2, 1, 1)
-                # plt.plot(I)
-                # plt.subplot(2, 1, 2)
-                # plt.plot(Q)
-                # plt.show()
+                plt.figure()
+                plt.subplot(2, 1, 1)
+                plt.plot(I)
+                plt.subplot(2, 1, 2)
+                plt.plot(Q)
+                plt.show()
 
                 I = []
                 Q = []
