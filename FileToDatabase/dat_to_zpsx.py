@@ -12,6 +12,7 @@ from Utils.fc_bw_estimate import fc_bw_estimate
 from Utils.code_rate_estimate import code_rate_estimate
 from Utils.mod_recognition import mod_recognition
 import matplotlib.pyplot as plt
+from scipy.fftpack import hilbert
 
 
 # 编写sql语句，连接数据库并写入数据
@@ -107,7 +108,7 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
                 Q.append(q)
 
             # 某时隙数据体末尾数据不足1024，则跳过补齐的数据
-            if length_resolved != 1024:
+            if length_resolved < 1024:
                 f.seek(1024 - length_resolved, 1)
 
             # 若到达时隙数据末尾，则进行参数估计及解析入库
@@ -182,7 +183,7 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
                 # print(code_rate)
 
                 # 调制模式
-                # modulation_mode = mod_recognition(iq=signal[:10000])
+                modulation_mode = mod_recognition(iq=signal, fs=fs_rate)
 
                 # 打印输出
                 # print(file, count_resolved, sep=":")
@@ -212,13 +213,15 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
                 # IQ_np = np.array(IQ)
                 # np.save(iqlocation, IQ_np)
 
+                Q_test = hilbert(I)
+
                 # IQ数据展示
-                plt.figure()
-                plt.subplot(2, 1, 1)
-                plt.plot(I)
-                plt.subplot(2, 1, 2)
-                plt.plot(Q)
-                plt.show()
+                # plt.figure()
+                # plt.subplot(2, 1, 1)
+                # plt.plot(I)
+                # plt.subplot(2, 1, 2)
+                # plt.plot(Q)
+                # plt.show()
 
                 I = []
                 Q = []

@@ -8,32 +8,32 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pywt
+from scipy.fftpack import hilbert
 
-sampling_rate = 1024#采样频率
+sampling_rate = 256#采样频率
 t = np.arange(0,1.0,1.0/sampling_rate)
-f1 = 100#频率
-f2 = 200
-f3 = 300
+f1 = 1#频率
+f2 = 2
+f3 = 3
 data = np.piecewise(t,[t<1,t<0.8,t<0.3],
-                    [lambda t : np.sin(2*np.pi *f1*t),
+                    [lambda t : 2 * np.sin(2 * np.pi * f2 * t),
                      lambda t : np.sin(2 * np.pi * f2 * t),
-                     lambda t : np.sin(2 * np.pi * f3 * t)])
-wavename = "cgau8"
-totalscal = 256
-fc = pywt.central_frequency(wavename)#中心频率
-cparam = 2 * fc * totalscal
-scales = cparam/np.arange(totalscal,1,-1)
-[cwtmatr, frequencies] = pywt.cwt(data,scales,wavename,1.0/sampling_rate)#连续小波变换
-plt.figure(figsize=(8, 4))
-plt.subplot(211)
-plt.plot(t, data)
-plt.xlabel(u"time(s)")
-plt.title(u"300Hz 200Hz 100Hz Time spectrum")
-plt.subplot(212)
-plt.contourf(t, frequencies, abs(cwtmatr))
-plt.ylabel(u"freq(Hz)")
-plt.xlabel(u"time(s)")
-plt.subplots_adjust(hspace=0.4)
+                     lambda t : 3 * np.sin(2 * np.pi * f2 * t)])
+
+
+# Q = np.piecewise(t,[t<1,t<0.8,t<0.3],
+#                     [lambda t : hilbert(np.sin(2 * np.pi * f1 * t)),
+#                      lambda t : hilbert(np.sin(2 * np.pi * f2 * t)),
+#                      lambda t : hilbert(np.sin(2 * np.pi * f3 * t))])
+
+Q = hilbert(data)
+
+
+plt.figure()
+plt.subplot(2, 1, 1)
+plt.plot(data)
+plt.subplot(2, 1, 2)
+plt.plot(Q)
 plt.show()
 
 
