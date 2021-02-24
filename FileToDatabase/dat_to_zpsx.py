@@ -114,8 +114,6 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
             # 若到达时隙数据末尾，则进行参数估计及解析入库
             if serial_resolved == packages_resolved:
 
-
-
                 # 如果包数太少，则不入库
                 # if packages_resolved < cfg.MIN_PACKAGES:
                 #     print('Alert too few packages, file: %s, count: %s, packages: %s'
@@ -184,6 +182,7 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
 
                 # 调制模式
                 modulation_mode = mod_recognition(iq=signal, fs=fs_rate)
+                print(modulation_mode)
 
                 # 打印输出
                 # print(file, count_resolved, sep=":")
@@ -213,7 +212,7 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
                 # IQ_np = np.array(IQ)
                 # np.save(iqlocation, IQ_np)
 
-                Q_test = hilbert(I)
+
 
                 # IQ数据展示
                 # plt.figure()

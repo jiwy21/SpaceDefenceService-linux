@@ -28,7 +28,7 @@ def code_rate_estimate(iq, a, fs, n_fft=cfg.N_FFT):
     :param fs: sample rate
     :return:
     """
-    iq = np.imag(np.array(iq, dtype=complex))
+    iq = np.real(np.array(iq, dtype=complex))
     X = np.abs(cwt(iq, a, 'cgau8', len(iq))[0][0])
 
     max_points = signal.argrelextrema(X, np.greater)[0]

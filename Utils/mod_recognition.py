@@ -20,6 +20,8 @@ from scipy.signal import butter, lfilter, freqz
 import matplotlib.pyplot as plt
 from scipy.fftpack import hilbert
 from scipy.interpolate import interp1d
+from Utils.code_rate_estimate import code_rate_estimate
+from Utils.fc_bw_estimate import fc_bw_estimate
 
 
 
@@ -90,7 +92,7 @@ def mod_recognition(iq, fs, n_fft=cfg.N_FFT):
     """
 
     r_max = r_max_cal(iq, n_fft)
-    print(r_max)
+    # print(r_max)
 
     if r_max >= cfg.AMP_THRESHOLD:
 
@@ -146,12 +148,10 @@ def awgn(x, snr, seed=7):
 
 if __name__ == '__main__':
 
-    N = 2000
+    N = 3000
     bit_rate = 10000
-    fc = 40000
+    fc = 4000
     fs = 1000000
-    M = 8
-    mul = 1000
 
     # 生成比特流
     bit_stream = []
@@ -186,34 +186,43 @@ if __name__ == '__main__':
     #     if i % 2 == 0:
     #         n += bit_stream[i]
     #     else:
-    #         n = 2 * n + bit_stream[i] + 1
+    #         n = 2 * n + bit_stream[i]
     #         I.append(n)
     #         n = 0
+    # Q = hilbert(I)
     #
     # I_carrier = []
+    # Q_carrier = []
     # t_bit = np.linspace(0, 1 / bit_rate, int(1 / bit_rate * fs), endpoint=False)
     # for i in range(0, N // 2):
-    #     I_carrier.extend((np.cos(2 * np.pi * I[i] * fc * t_bit)).tolist())
-    # Q_carrier = hilbert(I_carrier)
+    #     I_carrier.extend((np.cos(2 * np.pi * (fc + I[i] * 10) * t_bit)).tolist())
+    #     Q_carrier.extend((np.cos(2 * np.pi * (fc + Q[i] * 10) * t_bit + np.pi / 2)).tolist())
 
-    # 4ASK
+    # 16ASK
     # I = []
     # n = 0
     # for i in range(0, N):
     #     if i % 2 == 0:
     #         n += bit_stream[i]
     #     else:
-    #         n = 2 * n + bit_stream[i] + 1
+    #         n = 2 * n + bit_stream[i]
     #         I.append(n)
     #         n = 0
-    #
-    # I = bit_stream + 1
+    # I = bit_stream
+
+    # I = []
+    # for i in range(0, N // 4):
+    #     bits = str(bit_stream[i * 4]) + str(bit_stream[i * 4 + 1])\
+    #            + str(bit_stream[i * 4 + 2]) + str(bit_stream[i * 4 + 3])
+    #     I.append(int(bits, 2))
+    # Q = hilbert(I)
     #
     # I_carrier = []
+    # Q_carrier = []
     # t_bit = np.linspace(0, 1 / bit_rate, int(1 / bit_rate * fs), endpoint=False)
-    # for i in range(0, N // 2):
+    # for i in range(0, N // 4):
     #     I_carrier.extend((I[i] * np.cos(2 * np.pi * fc * t_bit)).tolist())
-    # Q_carrier = hilbert(I_carrier)
+    #     Q_carrier.extend((Q[i] * np.cos(2 * np.pi * fc * t_bit + np.pi / 2)).tolist())
 
     # 16QAM
     # 映射字典
@@ -240,8 +249,38 @@ if __name__ == '__main__':
     #     I_carrier.extend((I[i] * 2000 * np.cos(2 * np.pi * fc * t_bit)).tolist())
     #     Q_carrier.extend((Q[i] * 2000 * np.cos(2 * np.pi * fc * t_bit + np.pi / 2)).tolist())
 
+
+    # 64QAM
+    # 映射字典
+    # bits2iq = {'100000': (-7, 7),   '100001': (-5, 7),   '100011': (-3, 7),   '100010': (-1, 7),  '100110': (1, 7),  '100111': (3, 7),  '100101': (5, 7),  '100100': (7, 7),
+    #            '101000': (-7, 5),   '101001': (-5, 5),   '101011': (-3, 5),   '101010': (-1, 5),  '101110': (1, 5),  '101111': (3, 5),  '101101': (5, 5),  '101100': (7, 5),
+    #            '111000': (-7, 3),   '111001': (-5, 3),   '111011': (-3, 3),   '111010': (-1, 3),  '111110': (1, 3),  '111111': (3, 3),  '111101': (5, 3),  '111100': (7, 3),
+    #            '110000': (-7, 1),   '110001': (-5, 1),   '110011': (-3, 1),   '110010': (-1, 1),  '110110': (1, 1),  '110111': (3, 1),  '110101': (5, 1),  '110100': (7, 1),
+    #            '010000': (-7, -1),  '010001': (-5, -1),  '010011': (-3, -1),  '010010': (-1, -1), '010110': (1, -1), '010111': (3, -1), '010101': (5, -1), '010100': (7, -1),
+    #            '011000': (-7, -3),  '011001': (-5, -3),  '011011': (-3, -3),  '011010': (-1, -3), '011110': (1, -3), '011111': (3, -3), '011101': (5, -3), '011100': (7, -3),
+    #            '001000': (-7, -5),  '001001': (-5, -5),  '001011': (-3, -5),  '001010': (-1, -5), '001110': (1, -5), '001111': (3, -5), '001101': (5, -5), '001100': (7, -5),
+    #            '000000': (-7, -7),  '000001': (-5, -7),  '000011': (-3, -7),  '000010': (-1, -7), '000110': (1, -7), '000111': (3, -7), '000101': (5, -7), '000100': (7, -7)}
+    #
+    # I = []
+    # Q = []
+    # for i in range(0, N // 6):
+    #     bits = ''
+    #     for j in range(0, 6):
+    #         bits += str(bit_stream[i * 6 + j])
+    #     iq = bits2iq[bits]
+    #
+    #     I.append(iq[0])
+    #     Q.append(iq[1])
+    #
+    # I_carrier = []
+    # Q_carrier = []
+    # t_bit = np.linspace(0, 1 / bit_rate, int(1 / bit_rate * fs), endpoint=False)
+    # for i in range(0, N // 6):
+    #     I_carrier.extend((I[i] * np.cos(2 * np.pi * fc * t_bit)).tolist())
+    #     Q_carrier.extend((Q[i] * np.cos(2 * np.pi * fc * t_bit + np.pi / 2)).tolist())
+
     # 加入噪声
-    snr = 10
+    snr = 140
     I_carrier = np.array(I_carrier)
     Q_carrier = np.array(Q_carrier)
     I_carrier = awgn(x=I_carrier, snr=snr)
@@ -250,15 +289,15 @@ if __name__ == '__main__':
     # 生成复信号
     n = len(I_carrier)
     sigs = []
-    t = np.linspace(0, n // fs, n, endpoint=False)
     for i in range(n):
         sig = complex(I_carrier[i], Q_carrier[i])
         sigs.append(sig)
 
     # my_plot(sigs)
+    [x, y] = fc_bw_estimate(sigs, fs)
+    z = code_rate_estimate(sigs, 20, fs)
     mod = mod_recognition(sigs, fs=fs, n_fft=500000)
     print()
-
 
 
 
