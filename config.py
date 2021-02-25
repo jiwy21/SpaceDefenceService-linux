@@ -1,8 +1,8 @@
 # -*- coding:utf-8 -*-
 
 
-ZPSX_SOURCE_DIR = 'D:/36Data/Intermediate/2020-06-12/'
-ZPSX_DEST_DIR = 'D:/36Data/IQ_Data/2020-06-12/'
+ZPSX_SOURCE_DIR = 'D:/36Data/Intermediate/2020-06-17/'
+ZPSX_DEST_DIR = 'D:/36Data/IQ_Data/2020-06-17/'
 
 SXDW_SOURCE_DIR = 'D:/36Data/sxdw/'
 

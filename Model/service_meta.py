@@ -7,7 +7,7 @@ class IntermediateMeta(object):
 
     def __init__(self, id=None, count=None, packages=None, satellite=None, arrival_time=None,
                  duration=None, freq_down=None, freq_unit=None, iqlocation=None, iqlen=None,
-                 bitrate=None, coderate=None, bandwidth=None, fs_rate=None, snr=None, freq_carrier=None):
+                 bitrate=None, coderate=None, bandwidth=None, fs_rate=None, snr=None, freq_carrier=None, modulation_mode=None):
 
         """
         :param id:
@@ -23,6 +23,7 @@ class IntermediateMeta(object):
         :param bitrate:
         :param coderate:
         :param bandwidth:
+        :param modulation_mode:
         """
 
         self._id = id
@@ -41,6 +42,7 @@ class IntermediateMeta(object):
         self._fs_rate = fs_rate
         self._snr = snr
         self._freq_carrier = freq_carrier
+        self._modulation_mode = modulation_mode
 
     @property
     def id(self):
@@ -169,6 +171,14 @@ class IntermediateMeta(object):
     @freq_carrier.setter
     def freq_carrier(self, val):
         self._freq_carrier = val
+
+    @property
+    def modulation_mode(self):
+        return self._modulation_mode
+
+    @modulation_mode.setter
+    def modulation_mode(self, val):
+        self._modulation_mode = val
 
 
 class IQMeta(object):

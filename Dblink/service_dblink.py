@@ -25,7 +25,7 @@ class ServiceDblink(object):
 
         # 编写sql语句
         sql = "select id, count, packages, satellite, arrival_time, duration, freq_down, \
-              freq_unit, iqlocation, iqlen, bitrate, coderate, bandwidth, fs_rate, snr, freq_carrier " \
+              freq_unit, iqlocation, iqlen, bitrate, coderate, bandwidth, fs_rate, snr, freq_carrier, modulation_mode " \
               "from %s where arrival_time between '%s' and '%s'" % (cfg.TABLE_ZPSX, seek_start, seek_end)
 
         # 连接数据库
@@ -43,7 +43,7 @@ class ServiceDblink(object):
                                               arrival_time=zpsx[4], duration=zpsx[5], freq_down=zpsx[6],
                                               freq_unit=zpsx[7], iqlocation=zpsx[8], iqlen=zpsx[9], bitrate=zpsx[10],
                                               coderate=zpsx[11], bandwidth=zpsx[12], fs_rate=zpsx[13], snr=zpsx[14],
-                                              freq_carrier=zpsx[15]))
+                                              freq_carrier=zpsx[15], modulation_mode=zpsx[16]))
 
         return zpsxs_uni
 
@@ -88,7 +88,7 @@ class ServiceDblink(object):
 
         # 编写sql语句
         sql = "select id, count, packages, satellite, arrival_time, duration, freq_down, \
-              freq_unit, iqlocation, iqlen, bitrate, coderate, bandwidth, fs_rate, snr, freq_carrier " \
+              freq_unit, iqlocation, iqlen, bitrate, coderate, bandwidth, fs_rate, snr, freq_carrier, modulation_mode " \
               "from %s where arrival_time between '%s' and '%s'" % (cfg.TABLE_ZPSX, seek_time_before, seek_time_after)
 
         # 连接数据库
@@ -106,7 +106,7 @@ class ServiceDblink(object):
                                               arrival_time=zpsx[4], duration=zpsx[5], freq_down=zpsx[6],
                                               freq_unit=zpsx[7], iqlocation=zpsx[8], iqlen=zpsx[9], bitrate=zpsx[10],
                                               coderate=zpsx[11], bandwidth=zpsx[12], fs_rate=zpsx[13], snr=zpsx[14],
-                                              freq_carrier=zpsx[15]))
+                                              freq_carrier=zpsx[15], modulation_mode=zpsx[16]))
 
         return zpsxs_uni
 

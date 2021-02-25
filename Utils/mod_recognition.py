@@ -22,6 +22,7 @@ from scipy.fftpack import hilbert
 from scipy.interpolate import interp1d
 from Utils.code_rate_estimate import code_rate_estimate
 from Utils.fc_bw_estimate import fc_bw_estimate
+from Utils.snr_estimate import snr_estimate
 
 
 
@@ -150,7 +151,7 @@ if __name__ == '__main__':
 
     N = 3000
     bit_rate = 10000
-    fc = 4000
+    fc = 40000
     fs = 1000000
 
     # 生成比特流
@@ -162,22 +163,22 @@ if __name__ == '__main__':
 
     # QPSK
     # 生成I路Q路数据
-    bit_stream = 2 * bit_stream - 1
-    I = []
-    Q = []
-    for i in range(0, N):
-        if i % 2 == 0:
-            I.append(bit_stream[i])
-        else:
-            Q.append(bit_stream[i])
-
-    # 生成中频信号（加载波）
-    I_carrier = []
-    Q_carrier = []
-    t_bit = np.linspace(0, 1 / bit_rate, int(1 / bit_rate * fs), endpoint=False)
-    for i in range(0, N // 2):
-        I_carrier.extend((I[i] * np.cos(2 * np.pi * fc * t_bit)).tolist())
-        Q_carrier.extend((Q[i] * np.cos(2 * np.pi * fc * t_bit + np.pi / 2)).tolist())
+    # bit_stream = 2 * bit_stream - 1
+    # I = []
+    # Q = []
+    # for i in range(0, N):
+    #     if i % 2 == 0:
+    #         I.append(bit_stream[i])
+    #     else:
+    #         Q.append(bit_stream[i])
+    #
+    # # 生成中频信号（加载波）
+    # I_carrier = []
+    # Q_carrier = []
+    # t_bit = np.linspace(0, 1 / bit_rate, int(1 / bit_rate * fs), endpoint=False)
+    # for i in range(0, N // 2):
+    #     I_carrier.extend((I[i] * np.cos(2 * np.pi * fc * t_bit)).tolist())
+    #     Q_carrier.extend((Q[i] * np.cos(2 * np.pi * fc * t_bit + np.pi / 2)).tolist())
 
     # 4FSK
     # I = []
@@ -210,19 +211,19 @@ if __name__ == '__main__':
     #         n = 0
     # I = bit_stream
 
-    # I = []
-    # for i in range(0, N // 4):
-    #     bits = str(bit_stream[i * 4]) + str(bit_stream[i * 4 + 1])\
-    #            + str(bit_stream[i * 4 + 2]) + str(bit_stream[i * 4 + 3])
-    #     I.append(int(bits, 2))
-    # Q = hilbert(I)
-    #
-    # I_carrier = []
-    # Q_carrier = []
-    # t_bit = np.linspace(0, 1 / bit_rate, int(1 / bit_rate * fs), endpoint=False)
-    # for i in range(0, N // 4):
-    #     I_carrier.extend((I[i] * np.cos(2 * np.pi * fc * t_bit)).tolist())
-    #     Q_carrier.extend((Q[i] * np.cos(2 * np.pi * fc * t_bit + np.pi / 2)).tolist())
+    I = []
+    for i in range(0, N // 4):
+        bits = str(bit_stream[i * 4]) + str(bit_stream[i * 4 + 1])\
+               + str(bit_stream[i * 4 + 2]) + str(bit_stream[i * 4 + 3])
+        I.append(int(bits, 2))
+    Q = hilbert(I)
+
+    I_carrier = []
+    Q_carrier = []
+    t_bit = np.linspace(0, 1 / bit_rate, int(1 / bit_rate * fs), endpoint=False)
+    for i in range(0, N // 4):
+        I_carrier.extend((I[i] * np.cos(2 * np.pi * fc * t_bit)).tolist())
+        Q_carrier.extend((Q[i] * np.cos(2 * np.pi * fc * t_bit + np.pi / 2)).tolist())
 
     # 16QAM
     # 映射字典
@@ -280,7 +281,7 @@ if __name__ == '__main__':
     #     Q_carrier.extend((Q[i] * np.cos(2 * np.pi * fc * t_bit + np.pi / 2)).tolist())
 
     # 加入噪声
-    snr = 140
+    snr = 25
     I_carrier = np.array(I_carrier)
     Q_carrier = np.array(Q_carrier)
     I_carrier = awgn(x=I_carrier, snr=snr)
@@ -296,6 +297,8 @@ if __name__ == '__main__':
     # my_plot(sigs)
     [x, y] = fc_bw_estimate(sigs, fs)
     z = code_rate_estimate(sigs, 20, fs)
+    snr = snr_estimate(sigs)
+
     mod = mod_recognition(sigs, fs=fs, n_fft=500000)
     print()
 

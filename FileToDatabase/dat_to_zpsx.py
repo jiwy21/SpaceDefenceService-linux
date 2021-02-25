@@ -182,7 +182,7 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
 
                 # 调制模式
                 modulation_mode = mod_recognition(iq=signal, fs=fs_rate)
-                print(modulation_mode)
+                # print(modulation_mode)
 
                 # 打印输出
                 # print(file, count_resolved, sep=":")
@@ -202,16 +202,15 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
 
                 # 编写sql语句，连接数据库并写入数据
                 sql = "insert into %s (id, count, packages, satellite, duration, freq_down, freq_unit, iqlocation, iqlen, " \
-                      "bitrate, coderate, bandwidth, arrival_time, fs_rate, snr, freq_carrier)" % cfg.TABLE_ZPSX + " values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', " \
-                      "'%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (cur_id, count_resolved, packages_resolved, satellite_resolved, duration_resolved,
-                      down_freq, freq_unit_resolved, iqlocation, len(I), bit_rate, code_rate, band_width, arrival_time, fs_rate, snr, freq_carrier)
+                      "bitrate, coderate, bandwidth, arrival_time, fs_rate, snr, freq_carrier, modulation_mode)" % cfg.TABLE_ZPSX + " values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', " \
+                      "'%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (cur_id, count_resolved, packages_resolved, satellite_resolved, duration_resolved,
+                      down_freq, freq_unit_resolved, iqlocation, len(I), bit_rate, code_rate, band_width, arrival_time, fs_rate, snr, freq_carrier, modulation_mode)
                 cur.execute(sql)
 
                 # IQ路数据落盘
                 # IQ = [I, Q]
                 # IQ_np = np.array(IQ)
                 # np.save(iqlocation, IQ_np)
-
 
 
                 # IQ数据展示
@@ -226,7 +225,7 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
                 Q = []
 
     # 每一个文件处理完成向数据库提交一次
-    # conn.commit()
+    conn.commit()
 
 # 所有文件都处理完关闭数据库连接
 conn.close()
