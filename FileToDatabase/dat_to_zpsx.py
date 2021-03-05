@@ -6,14 +6,11 @@ import struct
 from datetime import date
 import os
 import psycopg2
-import numpy as np
 from Utils.snr_estimate import snr_estimate
 from Utils.fc_bw_estimate import fc_bw_estimate
 from Utils.code_rate_estimate import code_rate_estimate
 from Utils.mod_recognition import mod_recognition
-import matplotlib.pyplot as plt
-from scipy.fftpack import hilbert
-
+import numpy as np
 
 # 编写sql语句，连接数据库并写入数据
 sql = "select count(*), max(id) from %s" % cfg.TABLE_ZPSX
@@ -208,10 +205,9 @@ for file in os.listdir(cfg.ZPSX_SOURCE_DIR):
                 cur.execute(sql)
 
                 # IQ路数据落盘
-                # IQ = [I, Q]
-                # IQ_np = np.array(IQ)
-                # np.save(iqlocation, IQ_np)
-
+                IQ = [I, Q]
+                IQ_np = np.array(IQ)
+                np.save(iqlocation, IQ_np)
 
                 # IQ数据展示
                 # plt.figure()

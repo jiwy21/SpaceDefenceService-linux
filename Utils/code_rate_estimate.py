@@ -2,24 +2,13 @@
 
 # -*- coding:utf-8 -*-
 
-from numpy.fft import fft
-import numpy as np
-from scipy import signal
-import matplotlib.pyplot as plt
-import os
-from matplotlib.pyplot import psd
-import pandas as pd
 from pywt import cwt
-import matplotlib.pyplot as plt
 from scipy import signal
 from numpy.fft import fft
 import config as cfg
 import random
 import numpy as np
-from scipy.signal import butter, lfilter, freqz
-import matplotlib.pyplot as plt
-from scipy.fftpack import hilbert
-from scipy.interpolate import interp1d
+from scipy.signal import butter, lfilter
 
 
 def code_rate_estimate(iq, a, fs, n_fft=cfg.N_FFT):

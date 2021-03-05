@@ -1,10 +1,10 @@
 # -*- coding:utf-8 -*-
 
 
-ZPSX_SOURCE_DIR = 'D:/36Data/Intermediate/2020-06-17/'
-ZPSX_DEST_DIR = 'D:/36Data/IQ_Data/2020-06-17/'
+ZPSX_SOURCE_DIR = '/media/tmxk-111/4C20F5B420F5A55C/36Data/Intermediate/2020-06-13/'
+ZPSX_DEST_DIR = '/media/tmxk-111/4C20F5B420F5A55C/36Data/IQ_Data/2020-06-13/'
 
-SXDW_SOURCE_DIR = 'D:/36Data/sxdw/'
+SXDW_SOURCE_DIR = '/media/tmxk-111/4C20F5B420F5A55C/36Data/sxdw/'
 
 # Days in 0001-01-01 : 2000-01-01
 DAYS_DELTA = 730119
@@ -14,10 +14,10 @@ TABLE_SXDW = 'sxdw'
 PORT = 29000
 
 USER = 'postgres'
-PASSWORD_DB = '123'
+PASSWORD_DB = 'postgres'
 PORT_DB = '5432'
 SERVER_IP = '127.0.0.1'
-DATABASE = 'test'
+DATABASE = 'postgres'
 
 # 定位结果到达时间前的秒数
 SECOND_BEFORE_SXDW = 10

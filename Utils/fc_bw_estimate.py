@@ -2,17 +2,10 @@
 # -*- coding:utf-8 -*-
 
 from numpy.fft import fft
-import numpy as np
-from scipy import signal
-import os
-import pandas as pd
 import config as cfg
-import matplotlib.pyplot as plt
 import random
 import numpy as np
-from scipy.signal import butter, lfilter, freqz
-import matplotlib.pyplot as plt
-from scipy.fftpack import hilbert
+from scipy.signal import butter, lfilter
 
 
 def fc_bw_estimate(iq, fs, n_fft=cfg.N_FFT):
@@ -32,11 +25,6 @@ def fc_bw_estimate(iq, fs, n_fft=cfg.N_FFT):
     X2_fft = X2[:n_fft // 2]
 
     power_spectrum = 10 * np.log10(X2_fft)
-    #
-    # h_power_spectrum = hilbert(power_spectrum)
-    # env_power_spectrum = np.sqrt(power_spectrum ** 2 + h_power_spectrum ** 2)
-
-    # plt.plot(power_spectrum)
 
     # 载频估计
     argmax_power_spectrum = np.argmax(power_spectrum)
