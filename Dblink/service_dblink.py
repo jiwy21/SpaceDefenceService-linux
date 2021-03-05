@@ -62,7 +62,7 @@ class ServiceDblink(object):
                                 host=cfg.SERVER_IP, port=cfg.PORT_DB)
         cur = conn.cursor()
         cur.execute(sql)
-        iqlocation = cur.fetchall()[0][0]
+        iqlocation = cur.fetchall()[0][0].strip()
         conn.close()
 
         # 从文件读取iq两路数据并格式化
