@@ -16,7 +16,7 @@ PORT = 29000
 USER = 'postgres'
 PASSWORD_DB = 'postgres'
 PORT_DB = '5432'
-SERVER_IP = '127.0.0.1'
+SERVER_IP = '172.17.0.1'
 DATABASE = 'postgres'
 
 # 定位结果到达时间前的秒数

@@ -33,8 +33,8 @@ class IntermediateMeta(object):
         self._arrival_time = str(arrival_time)
         self._duration = duration
         self._freq_down = freq_down
-        self._freq_unit = freq_unit
-        self._iqlocation = iqlocation
+        self._freq_unit = freq_unit.strip()
+        self._iqlocation = iqlocation.strip()
         self._iqlen = iqlen
         self._bitrate = bitrate
         self._coderate = coderate
@@ -42,7 +42,7 @@ class IntermediateMeta(object):
         self._fs_rate = fs_rate
         self._snr = snr
         self._freq_carrier = freq_carrier
-        self._modulation_mode = modulation_mode
+        self._modulation_mode = modulation_mode.strip()
 
     @property
     def id(self):
@@ -248,7 +248,7 @@ class SXDWMeta(object):
         self._id_sxdw = id_sxdw
         self._arrival_time = str(arrival_time)
         self._freq_down = freq_down
-        self._freq_down_unit = freq_down_unit
+        self._freq_down_unit = freq_down_unit.strip()
         self._batchnumber = batchnumber
         self._true_value_lon = true_value_lon
         self._true_value_lat = true_value_lat
@@ -257,14 +257,14 @@ class SXDWMeta(object):
         self._false_value_lon = false_value_lon
         self._false_value_lat = false_value_lat
         self._freq_up = freq_up
-        self._freq_up_unit = freq_up_unit
-        self._multi_access_mode = multi_access_mode
-        self._modulate_pattern = modulate_pattern
-        self._code_mode = code_mode
+        self._freq_up_unit = freq_up_unit.strip()
+        self._multi_access_mode = multi_access_mode.strip()
+        self._modulate_pattern = modulate_pattern.strip()
+        self._code_mode = code_mode.strip()
         self._bandwidth = bandwidth
-        self._bandwidth_unit = bandwidth_unit
+        self._bandwidth_unit = bandwidth_unit.strip()
         self._sps = sps
-        self._sps_unit = sps_unit
+        self._sps_unit = sps_unit.strip()
         self._medial_sat_norad = medial_sat_norad
         self._adjacent_sat_norad1 = adjacent_sat_norad1
         self._adjacent_sat_norad2 = adjacent_sat_norad2
